@@ -1,6 +1,9 @@
-import { DefaultTheme } from 'styled-components';
+import { DefaultTheme, ThemeProvider } from 'styled-components';
 import type { AppProps } from 'next/app';
 import GlobalStyle from '@/components/GlobalStyles';
+import { LazyMotion } from 'framer-motion';
+import { Provider } from 'react-redux';
+import { store } from '@/services/store';
 
 const light: DefaultTheme = {
     colors: {
@@ -46,9 +49,13 @@ const dark: DefaultTheme = {
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <>
-            <GlobalStyle />
-            <Component {...pageProps} />
-        </>
+        <LazyMotion features={async () => (await import('../components/domMax')).default}>
+            <Provider store={store}>
+                <ThemeProvider theme={light}>
+                    <GlobalStyle />
+                    <Component {...pageProps} />
+                </ThemeProvider>
+            </Provider>
+        </LazyMotion>
     );
 }
