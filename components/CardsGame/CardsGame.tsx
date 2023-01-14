@@ -5,6 +5,7 @@ import { ICardsData } from '@/types';
 import Card from './Card';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
 import { initGame } from '@/services/cardsGameSlice';
+import { NextGame, StartGameButton } from '../SubHeading';
 
 const Wrapper = styled(m.div)((props) => ({
     display: 'flex',
@@ -23,16 +24,10 @@ const CardsContainer = styled(m.div)((props) => ({
     maxWidth: '1000px',
 }));
 
-const StartGameButton = styled(m.button)((props) => ({
-    backgroundColor: props.theme.colors.secondaryDark,
-    color: props.theme.colors.background,
-    border: 'none',
-    padding: '1rem',
-}));
 const StyledParagraph = styled.p({
     textAlign: 'center',
-    width: '95%'
-})
+    width: '95%',
+});
 
 const cardsData: ICardsData[] = [
     {
@@ -143,7 +138,6 @@ const CardsGame = () => {
                         },
                     },
                 });
-                // handleShuffle();
             };
             sequence();
             setInitShuffle(true);
@@ -165,31 +159,36 @@ const CardsGame = () => {
 
     return (
         <AnimatePresence mode='wait'>
-            <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit'>
-                <CardsContainer style={ initShuffle ? {pointerEvents: 'none'}: {}}>
+            <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit' layout >
+                <CardsContainer style={initShuffle ? { pointerEvents: 'none' } : {}}>
                     {cards.map((card, index) => (
                         <Card key={card.id} img={card.img} name={card.name} id={card.id} animate={controls} />
                     ))}
                 </CardsContainer>
-                {gameStarted && <StyledParagraph>{initShuffle ? 'Cards are shuffling' : flippedCardsCount === 0 ? 'You may begin' : null}</StyledParagraph>}
+                <StyledParagraph>
+                    {initShuffle ? 'Cards being shuffled' : flippedCardsCount === 0 && gameStarted ? 'You may start' : !gameStarted ? 'Ready?' : null}
+                </StyledParagraph>
+                {gameStarted && (
+                    <StyledParagraph>
+                        {flippedCardsCount === 2 || flippedCardsCount === 3
+                            ? 'Great Start!'
+                            : flippedCardsCount === 4 || flippedCardsCount === 5
+                            ? 'Here goes two!'
+                            : flippedCardsCount === 6 || flippedCardsCount === 7
+                            ? 'OMG that is three in a row'
+                            : flippedCardsCount === 8 || flippedCardsCount === 9
+                            ? 'Incredible! What a winning streak!'
+                            : flippedCardsCount === 10
+                            ? 'No way you did it first try! WOW, what a luck!'
+                            : null}
+                    </StyledParagraph>
+                )}
                 {!gameStarted && (
                     <StartGameButton type='button' onClick={handleStartGame}>
-                        Start Game
+                        Begin
                     </StartGameButton>
                 )}
-                <StyledParagraph>
-                    {flippedCardsCount === 2 || flippedCardsCount === 3
-                        ? 'Great Start!'
-                        : flippedCardsCount === 4 || flippedCardsCount === 5
-                        ? 'Here goes two!'
-                        : flippedCardsCount === 6 || flippedCardsCount === 7
-                        ? 'OMG that is three in a row'
-                        : flippedCardsCount === 8 || flippedCardsCount === 9
-                        ? 'Incredible! What a winning streak!'
-                        : flippedCardsCount === 10
-                        ? 'No way you did it first try! WOW, what a luck!'
-                        : null}
-                </StyledParagraph>
+                {gameStarted && flippedCardsCount === 10 && <NextGame href={'/'}>Next Game</NextGame>}
             </Wrapper>
         </AnimatePresence>
     );

@@ -1,10 +1,9 @@
+
 import Head from 'next/head';
-import DiceGame from '@/components/DiceGame/DiceGame';
+import CardsGame from '@/components/CardsGame/CardsGame';
 import { SubHeading } from '@/components/SubHeading';
 
-
-
-export default function Dice() {
+const FindPairs = () => {
     return (
         <>
             <Head>
@@ -13,8 +12,10 @@ export default function Dice() {
                 <meta name='viewport' content='width=device-width, initial-scale=1' />
                 <link rel='icon' href='/favicon.ico' />
             </Head>
-            <SubHeading>Can you guess the next roll?</SubHeading>
-            <DiceGame />
+            <SubHeading>Find Pairs</SubHeading>
+            <CardsGame />
         </>
     );
-}
+};
+
+export default FindPairs;
