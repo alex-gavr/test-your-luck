@@ -1,7 +1,6 @@
-
 import Head from 'next/head';
 import CardsGame from '@/components/CardsGame/CardsGame';
-import { SubHeading } from '@/components/SubHeading';
+import { StyledSection, SubHeading } from '@/components/styles';
 
 const FindPairs = () => {
     return (
@@ -12,8 +11,10 @@ const FindPairs = () => {
                 <meta name='viewport' content='width=device-width, initial-scale=1' />
                 <link rel='icon' href='/favicon.ico' />
             </Head>
-            <SubHeading>Find Pairs</SubHeading>
-            <CardsGame />
+            <StyledSection>
+                <SubHeading>Find Pairs</SubHeading>
+                <CardsGame />
+            </StyledSection>
         </>
     );
 };

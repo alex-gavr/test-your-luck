@@ -1,8 +1,6 @@
 import Head from 'next/head';
 import DiceGame from '@/components/DiceGame/DiceGame';
-import { SubHeading } from '@/components/SubHeading';
-
-
+import { StyledSection, SubHeading } from '@/components/styles';
 
 export default function Dice() {
     return (
@@ -13,8 +11,10 @@ export default function Dice() {
                 <meta name='viewport' content='width=device-width, initial-scale=1' />
                 <link rel='icon' href='/favicon.ico' />
             </Head>
-            <SubHeading>Can you guess the next roll?</SubHeading>
-            <DiceGame />
+            <StyledSection>
+                <SubHeading>Can you guess the next roll?</SubHeading>
+                <DiceGame />
+            </StyledSection>
         </>
     );
 }

@@ -5,7 +5,7 @@ import { ICardsData } from '@/types';
 import Card from './Card';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
 import { initGame } from '@/services/cardsGameSlice';
-import { NextGame, StartGameButton } from '../SubHeading';
+import { NextGame, StartGameButton } from '../styles';
 
 const Wrapper = styled(m.div)((props) => ({
     display: 'flex',
@@ -166,7 +166,7 @@ const CardsGame = () => {
                     ))}
                 </CardsContainer>
                 <StyledParagraph>
-                    {initShuffle ? 'Cards being shuffled' : flippedCardsCount === 0 && gameStarted ? 'You may start' : !gameStarted ? 'Ready?' : null}
+                    {initShuffle ? 'Cards being shuffled' : flippedCardsCount === 0 && gameStarted ? 'You may begin' : !gameStarted ? 'Ready?' : null}
                 </StyledParagraph>
                 {gameStarted && (
                     <StyledParagraph>
@@ -185,10 +185,10 @@ const CardsGame = () => {
                 )}
                 {!gameStarted && (
                     <StartGameButton type='button' onClick={handleStartGame}>
-                        Begin
+                        Shuffle Cards
                     </StartGameButton>
                 )}
-                {gameStarted && flippedCardsCount === 10 && <NextGame href={'/'}>Next Game</NextGame>}
+                {gameStarted && flippedCardsCount === 10 && <NextGame href={'/age'}>Continue</NextGame>}
             </Wrapper>
         </AnimatePresence>
     );

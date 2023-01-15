@@ -17,8 +17,13 @@ export const cardsGameSlice = createSlice({
         flipCard(state) {
             state.flippedCardsCount = state.flippedCardsCount + 1;
         },
+        resetCardGame(state) {
+            state.gameStarted = false;
+            state.cardFlipped = false;
+            state.flippedCardsCount = 0;
+        }
     },
 });
 
-export const { initGame, flipCard } = cardsGameSlice.actions;
+export const { initGame, flipCard, resetCardGame } = cardsGameSlice.actions;
 export default cardsGameSlice.reducer;

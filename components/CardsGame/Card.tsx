@@ -2,19 +2,19 @@ import styled from 'styled-components';
 import { animate, AnimationControls, m, TargetAndTransition, useAnimationControls, VariantLabels, Variants } from 'framer-motion';
 import Image from 'next/image';
 import { ICardsData } from '@/types';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
 import { flipCard } from '@/services/cardsGameSlice';
 
 const StyledCard = styled(m.div)((props) => ({
-    width: 150,
-    height: 150,
-    boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.2)',
+    width: `clamp(4.375rem, 3.1250rem + 6.6667vw, 9.375rem)`,
+    height: `clamp(4.375rem, 3.1250rem + 6.6667vw, 9.375rem)`,
+    boxShadow: '0px 0px 5px 2px rgba(0, 0, 0, 0.2)',
     display: 'flex',
     flexFlow: 'column',
     alignItems: 'center',
-    gap: '5px',
     justifyContent: 'center',
+    gap: '5px',
     borderRadius: '1rem',
     backgroundColor: props.theme.colors.primaryDark,
     padding: '0',
@@ -22,17 +22,13 @@ const StyledCard = styled(m.div)((props) => ({
         width: '100%',
         height: '40%',
     },
+    '& > p': {
+        fontSize: `clamp(0.5rem, 0.3750rem + 0.6667vw, 1rem)`,
+    },
     '@media only screen and (max-width: 500px)': {
-        width: 70,
-        height: 70,
         '& > img': {
             width: '2em',
             height: '2em',
-        },
-        '& > p': {
-            width: '100%',
-            height: '100%',
-            fontSize: '0.5rem',
         },
     },
 }));

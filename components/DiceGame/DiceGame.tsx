@@ -1,8 +1,7 @@
 import { DiceWithAnimation } from 'cyber-dice';
-import Link from 'next/link';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { NextGame, StartGameButton } from '../SubHeading';
+import { NextGame, StartGameButton } from '../styles';
 
 const StyledDiv = styled.div<any>((props) => ({
     display: 'flex',
@@ -13,8 +12,13 @@ const StyledDiv = styled.div<any>((props) => ({
 }));
 
 const FlexRow = styled(StyledDiv)({
-    flexFlow: 'row nowrap',
+    flexFlow: 'row wrap',
     gap: '1rem',
+    '& > li': {
+        '@media only screen and (max-width: 400px)': {
+            fontSize: '0.8rem',
+        },
+    },
 });
 const NumberContainer = styled.li<any>((props) => ({
     width: '40px',
@@ -28,14 +32,11 @@ const NumberContainer = styled.li<any>((props) => ({
     border: props.userChoice ? '3px solid green' : 'null',
 }));
 
-
-
-
 const diceNumbers: Array<1 | 2 | 3 | 4 | 5 | 6> = [1, 2, 3, 4, 5, 6];
 const DiceGame = () => {
+    const rInt = Math.floor(Math.random() * 6) + 1;
     const [userChoice, setUserChoice] = useState<1 | 2 | 3 | 4 | 5 | 6 | undefined>(undefined);
-
-    const [randomNumber, setRandomNumber] = useState(1);
+    const [randomNumber, setRandomNumber] = useState(rInt);
     const [isAnimating, setIsAnimating] = useState(true);
     const [isUserWon, setIsUserWon] = useState(false);
     const [showHint, setShowHint] = useState(false);
@@ -83,7 +84,7 @@ const DiceGame = () => {
             </FlexRow>
             <DiceWithAnimation randomNumber={randomNumber} isAnimation={isAnimating} animationEndHandler={animationEndHandler} />
             {isUserWon && <p> You guessed correctly! Nice!</p>}
-            {showHint && <p> Common, make a guess!</p>}
+            {showHint && <p>C&apos;mon, make a guess!</p>}
             {isUserWon ? (
                 <NextGame href={'./find-pairs'}>Next Game</NextGame>
             ) : (

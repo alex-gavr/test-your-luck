@@ -7,6 +7,9 @@ import { store } from '@/services/store';
 import styled from 'styled-components';
 import { Inter } from '@next/font/google';
 import Link from 'next/link';
+import { StyledMain } from '@/components/styles';
+
+const inter = Inter({ subsets: ['latin'] });
 
 const light: DefaultTheme = {
     colors: {
@@ -50,40 +53,13 @@ const dark: DefaultTheme = {
     },
 };
 
-const StyledMain = styled.main({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    width: '100%',
-    padding: '1.5rem',
-    gap: '3rem',
-    position: 'relative',
-    '@media only screen and (max-width: 500px)': {
-        padding: '0.5rem',
-    },
-});
-
 const StyledHeading = styled.h1((props) => ({
-    backgroundColor: props.theme.colors.secondaryDark,
+    backgroundColor: props.theme.colors.primaryLight,
     padding: '0.5rem 1rem',
     textAlign: 'center',
-    boxShadow: '1px 1px 20px 5px rgba(0, 0, 0, 0.2)',
-    color: props.theme.colors.primaryLight,
-}));
-const StyledLink = styled(Link)((props) => ({
-    width: 'auto',
-    height: 'auto',
-    padding: '1rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: `1px solid ${props.theme.colors.secondaryDark}`,
-    position: 'absolute',
-    bottom: '1rem',
-    right: '1rem',
-    cursor: 'pointer',
+    fontSize: '1.3rem',
+    boxShadow: '1px 1px 5px 2px rgba(0, 0, 0, 0.2)',
+    color: props.theme.colors.secondaryDark,
 }));
 
 const HeadingContainer = styled.div({
@@ -91,12 +67,13 @@ const HeadingContainer = styled.div({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '1.5rem',
-    position: 'absolute',
+    gap: '0.8rem',
     top: '1rem',
+    width: '100%',
+    '& > p': {
+        fontSize: '0.7rem',
+    }
 });
-
-const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps, router }: AppProps) {
     return (
@@ -107,9 +84,10 @@ export default function App({ Component, pageProps, router }: AppProps) {
                     <StyledMain className={inter.className}>
                         <HeadingContainer>
                             <StyledHeading>Test Your Luck</StyledHeading>
-                            <p>Game {router.pathname === '/' ? '1' : '2'} out of 3</p>
+                            {router.pathname === '/' && <p>Mini Game 1 out of 2</p>}
+                            {router.pathname === '/find-pairs' && <p>Mini Game 2 out of 2</p>}
+                            {router.pathname === '/age' && <p>Question 1 out of 1</p>}
                         </HeadingContainer>
-                        <StyledLink href={router.pathname === '/' ? '/find-pairs' : '/'}>Next Game</StyledLink>
                         <Component {...pageProps} />
                     </StyledMain>
                 </ThemeProvider>
