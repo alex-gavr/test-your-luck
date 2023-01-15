@@ -29,58 +29,7 @@ const StyledParagraph = styled.p({
     width: '95%',
 });
 
-const cardsData: ICardsData[] = [
-    {
-        id: 1,
-        name: 'apple',
-        img: '/apple.svg',
-    },
-    {
-        id: 2,
-        name: 'strawberry',
-        img: '/strawberry.svg',
-    },
-    {
-        id: 3,
-        name: 'cherry',
-        img: '/cherry.svg',
-    },
-    {
-        id: 4,
-        name: 'lemon',
-        img: '/lemon.svg',
-    },
-    {
-        id: 5,
-        name: 'pineapple',
-        img: '/pineapple.svg',
-    },
-    {
-        id: 6,
-        name: 'strawberry',
-        img: '/strawberry.svg',
-    },
-    {
-        id: 7,
-        name: 'lemon',
-        img: '/lemon.svg',
-    },
-    {
-        id: 8,
-        name: 'apple',
-        img: '/apple.svg',
-    },
-    {
-        id: 9,
-        name: 'pineapple',
-        img: '/pineapple.svg',
-    },
-    {
-        id: 10,
-        name: 'cherry',
-        img: '/cherry.svg',
-    },
-];
+
 
 const containerAnimation = {
     visible: (i = 1) => ({
@@ -100,12 +49,59 @@ const containerAnimation = {
     },
 };
 
-const initialShowCards = {
-    hidden: { x: -50, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 0.4 } },
-};
-
 const CardsGame = () => {
+    const cardsData: ICardsData[] = [
+        {
+            id: 1,
+            name: 'apple',
+            img: '/apple.svg',
+        },
+        {
+            id: 2,
+            name: 'strawberry',
+            img: '/strawberry.svg',
+        },
+        {
+            id: 3,
+            name: 'cherry',
+            img: '/cherry.svg',
+        },
+        {
+            id: 4,
+            name: 'lemon',
+            img: '/lemon.svg',
+        },
+        {
+            id: 5,
+            name: 'pineapple',
+            img: '/pineapple.svg',
+        },
+        {
+            id: 6,
+            name: 'strawberry',
+            img: '/strawberry.svg',
+        },
+        {
+            id: 7,
+            name: 'lemon',
+            img: '/lemon.svg',
+        },
+        {
+            id: 8,
+            name: 'apple',
+            img: '/apple.svg',
+        },
+        {
+            id: 9,
+            name: 'pineapple',
+            img: '/pineapple.svg',
+        },
+        {
+            id: 10,
+            name: 'cherry',
+            img: '/cherry.svg',
+        },
+    ];
     const [cards, setCards] = useState(cardsData);
     const [initShuffle, setInitShuffle] = useState(false);
     const [shuffledTimes, setShuffledTimes] = useState(0);
@@ -159,11 +155,9 @@ const CardsGame = () => {
 
     return (
         <AnimatePresence mode='wait'>
-            <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit' layout >
+            <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit' layout>
                 <CardsContainer style={initShuffle ? { pointerEvents: 'none' } : {}}>
-                    {cards.map((card, index) => (
-                        <Card key={card.id} img={card.img} name={card.name} id={card.id} animate={controls} />
-                    ))}
+                    {cards && cards.map((card, index) => <Card key={card.id} img={card.img} name={card.name} id={card.id} animate={controls} />)}
                 </CardsContainer>
                 <StyledParagraph>
                     {initShuffle ? 'Cards being shuffled' : flippedCardsCount === 0 && gameStarted ? 'You may begin' : !gameStarted ? 'Ready?' : null}
