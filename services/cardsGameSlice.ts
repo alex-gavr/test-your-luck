@@ -5,6 +5,7 @@ const initialState: ICardsGame = {
     gameStarted: false,
     cardFlipped: false,
     flippedCardsCount: 0,
+    probabilityMessage: ''
 };
 
 export const cardsGameSlice = createSlice({
@@ -17,13 +18,17 @@ export const cardsGameSlice = createSlice({
         flipCard(state) {
             state.flippedCardsCount = state.flippedCardsCount + 1;
         },
+        setProbabilityMessage(state, action) {
+            state.probabilityMessage = action.payload;
+        },
         resetCardGame(state) {
             state.gameStarted = false;
             state.cardFlipped = false;
             state.flippedCardsCount = 0;
+            state.probabilityMessage = '';
         }
     },
 });
 
-export const { initGame, flipCard, resetCardGame } = cardsGameSlice.actions;
+export const { initGame, flipCard, resetCardGame, setProbabilityMessage } = cardsGameSlice.actions;
 export default cardsGameSlice.reducer;

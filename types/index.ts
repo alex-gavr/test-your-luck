@@ -8,4 +8,5 @@ export interface ICardsGame {
     gameStarted: boolean;
     cardFlipped: boolean;
     flippedCardsCount: number;
+    probabilityMessage: string;
 }

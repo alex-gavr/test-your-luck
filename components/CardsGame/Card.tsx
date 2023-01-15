@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ICardsData } from '@/types';
 import {  useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
-import { flipCard } from '@/services/cardsGameSlice';
+import { flipCard, setProbabilityMessage } from '@/services/cardsGameSlice';
 
 const StyledCard = styled(m.div)((props) => ({
     width: `clamp(4.375rem, 3.1250rem + 6.6667vw, 9.375rem)`,
@@ -65,27 +65,35 @@ const Card = ({ img, name, animate, id }: IProps) => {
             if (flippedCardsCount === 0) {
                 setImage('./apple.svg');
                 setText('apple');
+                dispatch(setProbabilityMessage('The probability of getting the pair is 11,1%'));
             } else if (flippedCardsCount === 1) {
                 setImage('./apple.svg');
                 setText('apple');
+                dispatch(setProbabilityMessage(''));
             } else if (flippedCardsCount === 2) {
                 setImage('./cherry.svg');
                 setText('cherry');
+                dispatch(setProbabilityMessage('The chance of obtaining the pair again is 1,5%'));
             } else if (flippedCardsCount === 3) {
                 setImage('./cherry.svg');
                 setText('cherry');
+                dispatch(setProbabilityMessage(''));
             } else if (flippedCardsCount === 4) {
                 setImage('./strawberry.svg');
                 setText('strawberry');
+                dispatch(setProbabilityMessage('The likelihood of getting the pair once again is 0,31%'));
             } else if (flippedCardsCount === 5) {
                 setImage('./strawberry.svg');
                 setText('strawberry');
+                dispatch(setProbabilityMessage(''));
             } else if (flippedCardsCount === 6) {
                 setImage('./pineapple.svg');
                 setText('pineapple');
+                dispatch(setProbabilityMessage('The odds of getting the pair one more time is 0,1%'));
             } else if (flippedCardsCount === 7) {
                 setImage('./pineapple.svg');
                 setText('pineapple');
+                dispatch(setProbabilityMessage(''));
             } else if (flippedCardsCount === 8) {
                 setImage('./lemon.svg');
                 setText('lemon');

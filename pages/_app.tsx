@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Inter } from '@next/font/google';
 import Link from 'next/link';
 import { StyledMain } from '@/components/styles';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -52,13 +53,20 @@ const dark: DefaultTheme = {
         heading: 'clamp(2.75rem, 2.6442rem + 0.5128vw, 3.125rem)',
     },
 };
-
-const StyledHeading = styled.h1((props) => ({
+const Logo = styled.div( props => ({
     backgroundColor: props.theme.colors.primaryLight,
     padding: '0.5rem 1rem',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '.5rem',
+    boxShadow: '1px 1px 5px 2px rgba(0, 0, 0, 0.2)',
+}))
+
+const StyledHeading = styled.h1((props) => ({
     textAlign: 'center',
     fontSize: '1.3rem',
-    boxShadow: '1px 1px 5px 2px rgba(0, 0, 0, 0.2)',
     color: props.theme.colors.secondaryDark,
 }));
 
@@ -83,7 +91,10 @@ export default function App({ Component, pageProps, router }: AppProps) {
                     <GlobalStyle />
                     <StyledMain className={inter.className}>
                         <HeadingContainer>
+                            <Logo>
+                                <Image src={'./luck.svg'} alt='' width={30} height={30} style={{rotate: '-20deg'}} />
                             <StyledHeading>Test Your Luck</StyledHeading>
+                            </Logo>
                             {router.pathname === '/' && <p>Mini Game 1 out of 2</p>}
                             {router.pathname === '/find-pairs' && <p>Mini Game 2 out of 2</p>}
                             {router.pathname === '/age' && <p>Question 1 out of 1</p>}

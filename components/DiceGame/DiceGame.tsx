@@ -92,6 +92,7 @@ const DiceGame = () => {
                     Roll
                 </StartGameButton>
             )}
+            {userChoice && <p style={{fontSize: '0.8rem'}}>Probability of the win: 16.6%</p>}
         </StyledDiv>
     );
 };

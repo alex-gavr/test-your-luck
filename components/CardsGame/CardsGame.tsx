@@ -107,7 +107,7 @@ const CardsGame = () => {
     const [shuffledTimes, setShuffledTimes] = useState(0);
     const controls = useAnimationControls();
     const dispatch = useAppDispatch();
-    const { gameStarted, flippedCardsCount } = useAppSelector((state) => state.cardsGame);
+    const { gameStarted, flippedCardsCount, probabilityMessage } = useAppSelector((state) => state.cardsGame);
 
     const handleStartGame = () => {
         dispatch(initGame());
@@ -156,6 +156,7 @@ const CardsGame = () => {
     return (
         <AnimatePresence mode='wait'>
             <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit' layout>
+                {gameStarted && <p style={{fontSize: '0.8rem'}}>{probabilityMessage}</p>}
                 <CardsContainer style={initShuffle ? { pointerEvents: 'none' } : {}}>
                     {cards && cards.map((card, index) => <Card key={card.id} img={card.img} name={card.name} id={card.id} animate={controls} />)}
                 </CardsContainer>
