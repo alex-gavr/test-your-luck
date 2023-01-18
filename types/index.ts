@@ -6,7 +6,16 @@ export interface ICardsData {
 
 export interface ICardsGame {
     gameStarted: boolean;
-    cardFlipped: boolean;
+    shuffling: boolean;
+
     flippedCardsCount: number;
     probabilityMessage: string;
+    shouldFlipBack: boolean;
+    currentCard: {
+        id: number;
+        name: string;
+        img: string;
+    },
+    mistake: boolean;
+    pineapplesShown: boolean;
 }

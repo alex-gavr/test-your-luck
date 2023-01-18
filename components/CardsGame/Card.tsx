@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { animate, AnimationControls, m, TargetAndTransition, useAnimationControls, VariantLabels, Variants } from 'framer-motion';
+import { AnimationControls, m, TargetAndTransition, useAnimationControls, VariantLabels, Variants } from 'framer-motion';
 import Image from 'next/image';
 import { ICardsData } from '@/types';
-import {  useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
-import { flipCard, setProbabilityMessage } from '@/services/cardsGameSlice';
+import { flipCard, setCurrentCard, setMistake, setPineapplesShown, setProbabilityMessage } from '@/services/cardsGameSlice';
 
 const StyledCard = styled(m.div)((props) => ({
     width: `clamp(4.375rem, 3.1250rem + 6.6667vw, 9.375rem)`,
@@ -33,35 +33,43 @@ const StyledCard = styled(m.div)((props) => ({
     },
 }));
 
-const flipAnimation = {
-    hidden: { rotateY: 0 },
-    visible: {
-        rotateY: 170,
-        x: [-50, 50, 0],
-        transition: {
-            duration: 0.4,
-        },
-    },
-    exit: { rotateY: 170, transition: { duration: 3 } },
-};
 
 interface IProps extends ICardsData {
     variants?: Variants;
     animate?: boolean | TargetAndTransition | AnimationControls | VariantLabels | undefined;
 }
-const Card = ({ img, name, animate, id }: IProps) => {
+const Card = ({ img, name, id }: IProps) => {
     const dispatch = useAppDispatch();
-    const { flippedCardsCount, gameStarted } = useAppSelector((state) => state.cardsGame);
+    const { flippedCardsCount, gameStarted, currentCard, pineapplesShown } = useAppSelector((state) => state.cardsGame);
     const [isFlipped, setIsFlipped] = useState(false);
     const [image, setImage] = useState('');
     const [text, setText] = useState('');
+    const [firstMistakeCard, setFirstMistakeCard] = useState({
+        id: 0,
+        name: '',
+    });
+    const [secondMistakeCard, setSecondMistakeCard] = useState({
+        id: 0,
+        name: '',
+    });
 
-    const handleFlip = () => {
-        if (isFlipped) {
+    useEffect(() => {
+        if ((firstMistakeCard.id && flippedCardsCount === 8) || (secondMistakeCard.id && flippedCardsCount === 8)) {
+            const timer = setTimeout(() => {
+                setIsFlipped(false);
+                dispatch(setMistake(false));
+            }, 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [firstMistakeCard, secondMistakeCard, flippedCardsCount]);
+
+    const handleFlip = (id: number) => {
+        if (isFlipped || !gameStarted) {
             return;
         } else {
             dispatch(flipCard());
             setIsFlipped(!isFlipped);
+            console.log(id, name);
             if (flippedCardsCount === 0) {
                 setImage('./apple.svg');
                 setText('apple');
@@ -87,19 +95,149 @@ const Card = ({ img, name, animate, id }: IProps) => {
                 setText('strawberry');
                 dispatch(setProbabilityMessage(''));
             } else if (flippedCardsCount === 6) {
+                // Remember the Card 1 PINEAPPLE
+                setFirstMistakeCard({
+                    id: id,
+                    name: 'pineapple',
+                });
                 setImage('./pineapple.svg');
                 setText('pineapple');
                 dispatch(setProbabilityMessage('The odds of getting the pair one more time is 0,1%'));
             } else if (flippedCardsCount === 7) {
-                setImage('./pineapple.svg');
-                setText('pineapple');
+                dispatch(setMistake(true));
                 dispatch(setProbabilityMessage(''));
+                // Remember the Card 2 LEMON
+                setSecondMistakeCard({
+                    id: id,
+                    name: 'lemon',
+                });
+                setImage('./lemon.svg');
+                setText('lemon');
             } else if (flippedCardsCount === 8) {
-                setImage('./lemon.svg');
-                setText('lemon');
+                if (id === firstMistakeCard.id) {
+                    setImage('./pineapple.svg');
+                    setText('pineapple');
+                    dispatch(
+                        setCurrentCard({
+                            id: id,
+                            name: 'pineapple',
+                            img: './pineapple.svg',
+                        })
+                    );
+                } else if (id === secondMistakeCard.id) {
+                    setImage('./lemon.svg');
+                    setText('lemon');
+                    dispatch(
+                        setCurrentCard({
+                            id: id,
+                            name: 'lemon',
+                            img: './lemon.svg',
+                        })
+                    );
+                } else {
+                    setImage('./pineapple.svg');
+                    setText('pineapple');
+                    dispatch(
+                        setCurrentCard({
+                            id: id,
+                            name: 'pineapple',
+                            img: './pineapple.svg',
+                        })
+                    );
+                }
             } else if (flippedCardsCount === 9) {
-                setImage('./lemon.svg');
-                setText('lemon');
+                if (currentCard.name === 'pineapple') {
+                    setImage('./pineapple.svg');
+                    setText('pineapple');
+                    dispatch(setPineapplesShown(true));
+                } else {
+                    if (id === firstMistakeCard.id) {
+                        setImage('./pineapple.svg');
+                        setText('pineapple');
+                        dispatch(
+                            setCurrentCard({
+                                id: id,
+                                name: 'pineapple',
+                                img: './pineapple.svg',
+                            })
+                        );
+                    } else if (id === secondMistakeCard.id) {
+                        setImage('./lemon.svg');
+                        setText('lemon');
+                        dispatch(
+                            setCurrentCard({
+                                id: id,
+                                name: 'lemon',
+                                img: './lemon.svg',
+                            })
+                        );
+                    } else {
+                        if (currentCard.name === 'lemon') {
+                            setImage('./lemon.svg');
+                            setText('lemon');
+                        } else {
+                            setImage('./pineapple.svg');
+                            setText('pineapple');
+                            dispatch(setPineapplesShown(true));
+                        }
+                    }
+                }
+            } else if (flippedCardsCount === 10) {
+                if (pineapplesShown) {
+                    setImage('./lemon.svg');
+                    setText('lemon');
+                } else {
+                    if (id === firstMistakeCard.id) {
+                        setImage('./pineapple.svg');
+                        setText('pineapple');
+                        dispatch(
+                            setCurrentCard({
+                                id: id,
+                                name: 'pineapple',
+                                img: './pineapple.svg',
+                            })
+                        );
+                    } else if (id === secondMistakeCard.id) {
+                        setImage('./lemon.svg');
+                        setText('lemon');
+                        dispatch(
+                            setCurrentCard({
+                                id: id,
+                                name: 'lemon',
+                                img: './lemon.svg',
+                            })
+                        );
+                    } else {
+                        if (currentCard.name === 'pineapple') {
+                            setImage('./lemon.svg');
+                            setText('lemon');
+                        } else {
+                            setImage('./pineapple.svg');
+                            setText('pineapple');
+                        }
+                    }
+                }
+            } else if (flippedCardsCount === 11) {
+                if (pineapplesShown) {
+                    setImage('./lemon.svg');
+                    setText('lemon');
+                } else {
+                    if (id === firstMistakeCard.id) {
+                        setImage('./pineapple.svg');
+                        setText('pineapple');
+                    } else if (id === secondMistakeCard.id) {
+                        setImage('./lemon.svg');
+                        setText('lemon');
+                    } else {
+                        if (currentCard.name === 'lemon') {
+                            setImage('./lemon.svg');
+                            setText('lemon');
+                        } else {
+                            setImage('./pineapple.svg');
+                            setText('pineapple');
+                        }
+                    }
+                }
             }
         }
     };
@@ -108,10 +246,9 @@ const Card = ({ img, name, animate, id }: IProps) => {
         <StyledCard
             key={id}
             layout
-            animate={animate}
-            whileTap={{rotateY: 0}}
-            onTap={handleFlip}
-            onTapCancel={handleFlip}
+            initial={{ rotateY: 180 }}
+            animate={isFlipped || !gameStarted ? { rotateY: 0 } : { rotateY: 180 }}
+            onClick={() => handleFlip(id)}
             transition={{ type: 'spring', stiffness: 150, damping: 25 }}>
             {!gameStarted ? (
                 <>

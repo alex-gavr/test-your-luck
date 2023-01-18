@@ -1,10 +1,10 @@
-import { AnimatePresence, m, useAnimationControls } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { ICardsData } from '@/types';
 import Card from './Card';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
-import { initGame } from '@/services/cardsGameSlice';
+import { initGame, initShuffle, stopShuffle } from '@/services/cardsGameSlice';
 import { NextGame, StartGameButton } from '../styles';
 
 const Wrapper = styled(m.div)((props) => ({
@@ -22,14 +22,29 @@ const CardsContainer = styled(m.div)((props) => ({
     gap: '10px',
     width: '98%',
     maxWidth: '1000px',
+    position: 'relative',
+    minHeight: '300px',
+}));
+const StyledOverflowContainer = styled(m.div)((props) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    padding: '2rem 4rem',
+    gap: '1rem',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    backdropFilter: 'blur(3px) saturate(180%)',
+    zIndex: 5,
 }));
 
 const StyledParagraph = styled.p({
     textAlign: 'center',
     width: '95%',
 });
-
-
 
 const containerAnimation = {
     visible: (i = 1) => ({
@@ -103,11 +118,9 @@ const CardsGame = () => {
         },
     ];
     const [cards, setCards] = useState(cardsData);
-    const [initShuffle, setInitShuffle] = useState(false);
     const [shuffledTimes, setShuffledTimes] = useState(0);
-    const controls = useAnimationControls();
     const dispatch = useAppDispatch();
-    const { gameStarted, flippedCardsCount, probabilityMessage } = useAppSelector((state) => state.cardsGame);
+    const { gameStarted, flippedCardsCount, probabilityMessage, shuffling, mistake } = useAppSelector((state) => state.cardsGame);
 
     const handleStartGame = () => {
         dispatch(initGame());
@@ -123,46 +136,47 @@ const CardsGame = () => {
         setCards(shuffled);
     };
 
+    // Flip and Start shuffling
     useEffect(() => {
         if (gameStarted) {
-            const sequence = async () => {
-                await controls.start({
-                    rotateY: 180,
-                    transition: {
-                        rotateY: {
-                            duration: 0.5,
-                        },
-                    },
-                });
-            };
-            sequence();
-            setInitShuffle(true);
+            dispatch(initShuffle());
         }
     }, [gameStarted]);
 
+    // Stop Shuffling
     useEffect(() => {
-        if (initShuffle && shuffledTimes < 3) {
+        if (shuffling && shuffledTimes < 4) {
             const timer = setTimeout(() => {
                 handleShuffle();
                 setShuffledTimes(shuffledTimes + 1);
-                if (shuffledTimes === 2) {
-                    setInitShuffle(false);
+                if (shuffledTimes === 3) {
+                    dispatch(stopShuffle());
                 }
             }, 500);
             return () => clearTimeout(timer);
         }
-    }, [cards, initShuffle, shuffledTimes]);
+    }, [cards, shuffling, shuffledTimes]);
 
     return (
         <AnimatePresence mode='wait'>
-            <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit' layout>
-                {gameStarted && <p style={{fontSize: '0.8rem'}}>{probabilityMessage}</p>}
-                <CardsContainer style={initShuffle ? { pointerEvents: 'none' } : {}}>
-                    {cards && cards.map((card, index) => <Card key={card.id} img={card.img} name={card.name} id={card.id} animate={controls} />)}
+            <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit'>
+                {gameStarted && <p style={{ fontSize: '0.8rem' }}>{probabilityMessage}</p>}
+                <CardsContainer style={shuffling || mistake ? { pointerEvents: 'none' } : {}}>
+                    {cards ? (
+                        cards.map((card, index) => <Card key={card.id} img={card.img} name={card.name} id={card.id} />)
+                    ) : (
+                        <div style={{ height: '300px', width: '100vw' }} />
+                    )}
+                    {!gameStarted && (
+                        <StyledOverflowContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }}>
+                            <p>Ready?</p>
+                            <StartGameButton type='button' onClick={handleStartGame}>
+                                Shuffle Cards
+                            </StartGameButton>
+                        </StyledOverflowContainer>
+                    )}
                 </CardsContainer>
-                <StyledParagraph>
-                    {initShuffle ? 'Cards being shuffled' : flippedCardsCount === 0 && gameStarted ? 'You may begin' : !gameStarted ? 'Ready?' : null}
-                </StyledParagraph>
+                <StyledParagraph>{shuffling ? 'Cards being shuffled' : flippedCardsCount === 0 && gameStarted ? 'You may begin' : null}</StyledParagraph>
                 {gameStarted && (
                     <StyledParagraph>
                         {flippedCardsCount === 2 || flippedCardsCount === 3
@@ -172,18 +186,15 @@ const CardsGame = () => {
                             : flippedCardsCount === 6 || flippedCardsCount === 7
                             ? 'OMG that is three in a row'
                             : flippedCardsCount === 8 || flippedCardsCount === 9
-                            ? 'Incredible! What a winning streak!'
-                            : flippedCardsCount === 10
-                            ? 'No way you did it first try! WOW, what a luck!'
+                            ? 'Oh, no! Please try again! '
+                            : flippedCardsCount === 10 || flippedCardsCount === 11
+                            ? 'There we go!'
+                            : flippedCardsCount === 12
+                            ? 'Impressive luck!'
                             : null}
                     </StyledParagraph>
                 )}
-                {!gameStarted && (
-                    <StartGameButton type='button' onClick={handleStartGame}>
-                        Shuffle Cards
-                    </StartGameButton>
-                )}
-                {gameStarted && flippedCardsCount === 10 && <NextGame href={'/age'}>Continue</NextGame>}
+                {gameStarted && flippedCardsCount === 12 && <NextGame href={'/age'}>Continue</NextGame>}
             </Wrapper>
         </AnimatePresence>
     );
