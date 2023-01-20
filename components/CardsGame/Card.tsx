@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ICardsData } from '@/types';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
-import { flipCard, setCurrentCard, setMistake, setPineapplesShown, setProbabilityMessage } from '@/services/cardsGameSlice';
+import { finishGame, flipCard, setCurrentCard, setMistake, setPineapplesShown, setProbabilityMessage } from '@/services/cardsGameSlice';
 
 const StyledCard = styled(m.div)((props) => ({
     width: `clamp(4.375rem, 3.1250rem + 6.6667vw, 9.375rem)`,
@@ -69,7 +69,6 @@ const Card = ({ img, name, id }: IProps) => {
         } else {
             dispatch(flipCard());
             setIsFlipped(!isFlipped);
-            console.log(id, name);
             if (flippedCardsCount === 0) {
                 setImage('./apple.svg');
                 setText('apple');
@@ -238,6 +237,7 @@ const Card = ({ img, name, id }: IProps) => {
                         }
                     }
                 }
+                dispatch(finishGame())
             }
         }
     };

@@ -2,6 +2,7 @@ import { DiceWithAnimation } from 'cyber-dice';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { NextGame, StartGameButton } from '../styles';
+import ym from 'react-yandex-metrika';
 
 const StyledDiv = styled.div<any>((props) => ({
     display: 'flex',
@@ -49,10 +50,12 @@ const DiceGame = () => {
         if (userChoice !== undefined) {
             setRandomNumber(userChoice);
             setShowHint(false);
+            ym('reachGoal','rollDiceWithPrediction');
         } else {
             const newRandomNumber = Math.floor(Math.random() * 6) + 1;
             setRandomNumber(newRandomNumber);
             setShowHint(true);
+            ym('reachGoal','rollDiceNoPrediction');
         }
     };
     const animationEndHandler = () => {
@@ -72,6 +75,10 @@ const DiceGame = () => {
         }
     };
 
+    const handleNextGame = () => {
+        ym('reachGoal','goToCardsGame');
+    }
+
     return (
         <StyledDiv userChoice={userChoice}>
             <p>Choose Outcome: </p>
@@ -86,7 +93,7 @@ const DiceGame = () => {
             {isUserWon && <p> You guessed correctly! Nice!</p>}
             {showHint && <p>C&apos;mon, make a guess!</p>}
             {isUserWon ? (
-                <NextGame href={'./find-pairs'}>Next Game</NextGame>
+                <NextGame href={'./find-pairs'} onClick={handleNextGame}>Next Game</NextGame>
             ) : (
                 <StartGameButton type='button' disabled={isAnimating} onClick={clickHandler}>
                     Roll

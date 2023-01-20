@@ -6,6 +6,7 @@ import Card from './Card';
 import { useAppDispatch, useAppSelector } from '@/services/hook';
 import { initGame, initShuffle, stopShuffle } from '@/services/cardsGameSlice';
 import { NextGame, StartGameButton } from '../styles';
+import ym from 'react-yandex-metrika';
 
 const Wrapper = styled(m.div)((props) => ({
     display: 'flex',
@@ -120,10 +121,14 @@ const CardsGame = () => {
     const [cards, setCards] = useState(cardsData);
     const [shuffledTimes, setShuffledTimes] = useState(0);
     const dispatch = useAppDispatch();
-    const { gameStarted, flippedCardsCount, probabilityMessage, shuffling, mistake } = useAppSelector((state) => state.cardsGame);
+    const { gameStarted, flippedCardsCount, probabilityMessage, shuffling, mistake, gameFinished } = useAppSelector((state) => state.cardsGame);
 
     const handleStartGame = () => {
         dispatch(initGame());
+        ym('reachGoal', 'startCardsGame');
+    };
+    const handleNextGame = () => {
+        ym('reachGoal', 'goToAgeQuestion');
     };
 
     const handleShuffle = () => {
@@ -160,7 +165,7 @@ const CardsGame = () => {
     return (
         <AnimatePresence mode='wait'>
             <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit'>
-                {gameStarted && <p style={{ fontSize: '0.8rem' }}>{probabilityMessage}</p>}
+                {gameStarted && <p style={{ fontSize: '0.8rem', textAlign: 'center' }}>{probabilityMessage}</p>}
                 <CardsContainer style={shuffling || mistake ? { pointerEvents: 'none' } : {}}>
                     {cards ? (
                         cards.map((card, index) => <Card key={card.id} img={card.img} name={card.name} id={card.id} />)
@@ -173,6 +178,14 @@ const CardsGame = () => {
                             <StartGameButton type='button' onClick={handleStartGame}>
                                 Shuffle Cards
                             </StartGameButton>
+                        </StyledOverflowContainer>
+                    )}
+                    {gameFinished && (
+                        <StyledOverflowContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}>
+                            <p>Impressive luck!</p>
+                            <NextGame href={'/age'} onClick={handleNextGame}>
+                                Continue
+                            </NextGame>
                         </StyledOverflowContainer>
                     )}
                 </CardsContainer>
@@ -189,12 +202,9 @@ const CardsGame = () => {
                             ? 'Oh, no! Please try again! '
                             : flippedCardsCount === 10 || flippedCardsCount === 11
                             ? 'There we go!'
-                            : flippedCardsCount === 12
-                            ? 'Impressive luck!'
                             : null}
                     </StyledParagraph>
                 )}
-                {gameStarted && flippedCardsCount === 12 && <NextGame href={'/age'}>Continue</NextGame>}
             </Wrapper>
         </AnimatePresence>
     );

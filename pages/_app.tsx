@@ -6,9 +6,10 @@ import { Provider } from 'react-redux';
 import { store } from '@/services/store';
 import styled from 'styled-components';
 import { Inter } from '@next/font/google';
-import Link from 'next/link';
 import { StyledMain } from '@/components/styles';
 import Image from 'next/image';
+import YMetrika from '@/components/YMetrika';
+import { YMInitializer } from 'react-yandex-metrika';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -88,6 +89,8 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <LazyMotion features={async () => (await import('../components/domMax')).default}>
             <Provider store={store}>
                 <ThemeProvider theme={light}>
+                    {/* <YMetrika /> */}
+                    <YMInitializer accounts={[92124733]} options={{webvisor: true}} version="2"  />
                     <GlobalStyle />
                     <StyledMain className={inter.className}>
                         <HeadingContainer>

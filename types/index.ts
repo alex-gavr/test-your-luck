@@ -3,6 +3,9 @@ export interface ICardsData {
     name: string;
     img: string;
 }
+export interface IMainExit {
+    fromMainExit: boolean;
+}
 
 export interface ICardsGame {
     gameStarted: boolean;
@@ -18,4 +21,5 @@ export interface ICardsGame {
     },
     mistake: boolean;
     pineapplesShown: boolean;
+    gameFinished: boolean;
 }
