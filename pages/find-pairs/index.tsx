@@ -12,7 +12,7 @@ const FindPairs = () => {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <StyledSection>
-                <SubHeading>Find Pairs</SubHeading>
+                <SubHeading as={'h1'}>Find Pairs</SubHeading>
                 <CardsGame />
             </StyledSection>
         </>

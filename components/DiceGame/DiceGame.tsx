@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { NextGame, StartGameButton } from '../styles';
 import ym from 'react-yandex-metrika';
+import { m } from 'framer-motion';
 
 const StyledDiv = styled.div<any>((props) => ({
     display: 'flex',
@@ -21,16 +22,21 @@ const FlexRow = styled(StyledDiv)({
         },
     },
 });
-const NumberContainer = styled.li<any>((props) => ({
+interface IProps {
+    $userChoice?: boolean;
+    $showHint?: boolean;
+}
+const NumberContainer = styled.li<IProps>((props) => ({
     width: '40px',
     height: '40px',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: props.theme.colors.primaryLight,
+    color: props.theme.colors.title,
     borderRadius: '50%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    border: props.userChoice ? '3px solid green' : 'null',
+    border: props.$userChoice ? '3px solid #ffc20a ' : 'null',
 }));
 
 const diceNumbers: Array<1 | 2 | 3 | 4 | 5 | 6> = [1, 2, 3, 4, 5, 6];
@@ -50,12 +56,12 @@ const DiceGame = () => {
         if (userChoice !== undefined) {
             setRandomNumber(userChoice);
             setShowHint(false);
-            ym('reachGoal','rollDiceWithPrediction');
+            ym('reachGoal', 'rollDiceWithPrediction');
         } else {
             const newRandomNumber = Math.floor(Math.random() * 6) + 1;
             setRandomNumber(newRandomNumber);
             setShowHint(true);
-            ym('reachGoal','rollDiceNoPrediction');
+            ym('reachGoal', 'rollDiceNoPrediction');
         }
     };
     const animationEndHandler = () => {
@@ -76,30 +82,37 @@ const DiceGame = () => {
     };
 
     const handleNextGame = () => {
-        ym('reachGoal','goToCardsGame');
-    }
+        ym('reachGoal', 'goToCardsGame');
+    };
 
     return (
         <StyledDiv userChoice={userChoice}>
-            <p>Choose Outcome: </p>
+            <m.p animate={showHint ? { color: 'red', scale: [1, 1.2, 1] } : {}} transition={{ duration: 1 }}>
+                Choose Outcome:{' '}
+            </m.p>
             <FlexRow as='ul'>
                 {diceNumbers.map((value, index) => (
-                    <NumberContainer userChoice={userChoice === index + 1 ? true : false} key={index} onClick={() => handleUserChoice(value)}>
+                    <NumberContainer $userChoice={userChoice === index + 1 ? true : false} key={index} onClick={() => handleUserChoice(value)}>
                         <span>{value}</span>
                     </NumberContainer>
                 ))}
             </FlexRow>
             <DiceWithAnimation randomNumber={randomNumber} isAnimation={isAnimating} animationEndHandler={animationEndHandler} />
-            {isUserWon && <p> You guessed correctly! Nice!</p>}
-            {showHint && <p>C&apos;mon, make a guess!</p>}
+
+            {/* {showHint && <p>C&apos;mon, make a guess!</p>} */}
             {isUserWon ? (
-                <NextGame href={'./find-pairs'} onClick={handleNextGame}>Next Game</NextGame>
+                <NextGame href={'./find-pairs'} onClick={handleNextGame}>
+                    Next Game
+                </NextGame>
             ) : (
                 <StartGameButton type='button' disabled={isAnimating} onClick={clickHandler}>
                     Roll
                 </StartGameButton>
             )}
-            {userChoice && <p style={{fontSize: '0.8rem'}}>Probability of the win: 16.6%</p>}
+            <p style={userChoice || isUserWon ? { fontSize: '0.8rem', visibility: 'visible' } : { visibility: 'hidden' }}>
+                {userChoice ? 'Probability of the win: 16.6%' : isUserWon ? 'You guessed correctly! Nice!' : null}
+            </p>
+            {/* {isUserWon && <p> You guessed correctly! Nice!</p>} */}
         </StyledDiv>
     );
 };

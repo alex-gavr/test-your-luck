@@ -1,4 +1,4 @@
-import { ButtonsContainer, StyledLinkPrimary, StyledLinkError, StyledSection } from '@/components/styles';
+import { ButtonsContainer, StyledLinkPrimary, StyledLinkError, StyledSection, SubHeading } from '@/components/styles';
 import React from 'react';
 import ym from 'react-yandex-metrika';
 
@@ -12,10 +12,10 @@ const Age = () => {
     };
     return (
         <StyledSection>
-            <h2>Are you 18 or older?</h2>
+            <SubHeading>Are you 18 or older?</SubHeading>
             <ButtonsContainer>
-                <StyledLinkPrimary href={'/final-screen'} onClick={handleYes}>Yes ✅</StyledLinkPrimary>
                 <StyledLinkError href={'/thank-you'} onClick={handleNo}>No ❌</StyledLinkError>
+                <StyledLinkPrimary href={'/final-screen'} onClick={handleYes}>Yes ✅</StyledLinkPrimary>
             </ButtonsContainer>
         </StyledSection>
     );

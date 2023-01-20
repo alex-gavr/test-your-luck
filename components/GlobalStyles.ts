@@ -70,8 +70,8 @@ const GlobalStyle = createGlobalStyle`
         z-index: 2;
     }
     h3 {
-        
         font-size: ${({ theme }) => theme.fontSize.subHeading};
+        color: ${({ theme }) => theme.colors.title};
     }
     p {
         

@@ -47,9 +47,9 @@ export const NextGame = styled(Link)((props) => ({
     alignItems: 'center',
     gap: '1rem',
     cursor: 'pointer',
-    backgroundColor: props.theme.colors.secondaryDark,
-    color: props.theme.colors.background,
-    border: 'none',
+    background: `linear-gradient(132deg, rgba(255,226,140,1) 0%, rgba(201,255,209,1) 100%)`,
+    color: 'black',
+    border: `1px solid ${props.theme.colors.secondaryDark}`,
     padding: '1rem',
     borderRadius: '1rem',
     boxShadow: `rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px`,
@@ -72,9 +72,6 @@ export const ButtonsContainer = styled.div((props) => ({
     alignItems: 'center',
     justifyContent: 'center',
     gap: '1rem',
-    '@media only screen and (max-width: 500px)': {
-        flexFlow: 'column nowrap'
-    }
 }));
 
 

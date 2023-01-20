@@ -24,6 +24,7 @@ const StyledCard = styled(m.div)((props) => ({
     },
     '& > p': {
         fontSize: `clamp(0.5rem, 0.3750rem + 0.6667vw, 1rem)`,
+        color: 'black',
     },
     '@media only screen and (max-width: 500px)': {
         '& > img': {
@@ -72,7 +73,7 @@ const Card = ({ img, name, id }: IProps) => {
             if (flippedCardsCount === 0) {
                 setImage('./apple.svg');
                 setText('apple');
-                dispatch(setProbabilityMessage('The probability of getting the pair is 11,1%'));
+                dispatch(setProbabilityMessage('Pair chance: 11,1%'));
             } else if (flippedCardsCount === 1) {
                 setImage('./apple.svg');
                 setText('apple');
@@ -80,7 +81,7 @@ const Card = ({ img, name, id }: IProps) => {
             } else if (flippedCardsCount === 2) {
                 setImage('./cherry.svg');
                 setText('cherry');
-                dispatch(setProbabilityMessage('The chance of obtaining the pair again is 1,5%'));
+                dispatch(setProbabilityMessage('Pair chance again: 1,5%'));
             } else if (flippedCardsCount === 3) {
                 setImage('./cherry.svg');
                 setText('cherry');
@@ -88,7 +89,7 @@ const Card = ({ img, name, id }: IProps) => {
             } else if (flippedCardsCount === 4) {
                 setImage('./strawberry.svg');
                 setText('strawberry');
-                dispatch(setProbabilityMessage('The likelihood of getting the pair once again is 0,31%'));
+                dispatch(setProbabilityMessage('Pair chance again: 0,31%'));
             } else if (flippedCardsCount === 5) {
                 setImage('./strawberry.svg');
                 setText('strawberry');
@@ -101,7 +102,7 @@ const Card = ({ img, name, id }: IProps) => {
                 });
                 setImage('./pineapple.svg');
                 setText('pineapple');
-                dispatch(setProbabilityMessage('The odds of getting the pair one more time is 0,1%'));
+                dispatch(setProbabilityMessage('Pair chance again: 0,1%'));
             } else if (flippedCardsCount === 7) {
                 dispatch(setMistake(true));
                 dispatch(setProbabilityMessage(''));

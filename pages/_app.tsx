@@ -8,8 +8,9 @@ import styled from 'styled-components';
 import { Inter } from '@next/font/google';
 import { StyledMain } from '@/components/styles';
 import Image from 'next/image';
-import YMetrika from '@/components/YMetrika';
 import { YMInitializer } from 'react-yandex-metrika';
+import { Analytics } from '@vercel/analytics/react';
+import { useDarkMode } from '@/utils/useDarkMode';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,6 +26,7 @@ const light: DefaultTheme = {
         secondaryMedium: 'rgb(205, 240, 183)',
         secondaryDark: 'rgb(101, 164, 111)',
         error: 'rgb(204, 0, 0)',
+        overflowContainer: 'rgba(255, 255, 255, 0.75)',
     },
     fontSize: {
         body: 'clamp(1rem, 0.9295rem + 0.3419vw, 1.25rem)',
@@ -39,13 +41,14 @@ const dark: DefaultTheme = {
         background: 'rgba(0, 0, 0, 1)',
         title: 'rgba(255, 255, 255, 1)',
         paragraph: 'rgba(255, 255, 255, 0.7)',
-        primaryLight: 'rgba(155, 155, 155, 0.1)',
+        primaryLight: 'rgba(155, 155, 155, 0.2)',
         primaryMedium: 'rgb(255, 225, 31)',
         primaryDark: 'rgb(255, 194, 10)',
         secondaryLight: 'rgb(205, 240, 183)',
         secondaryMedium: 'rgb(205, 240, 153)',
         secondaryDark: 'rgb(101, 164, 111)',
         error: 'rgb(204, 0, 0)',
+        overflowContainer: 'rgba(50, 50, 50, 0.9)',
     },
     fontSize: {
         body: 'clamp(1rem, 0.9295rem + 0.3419vw, 1.25rem)',
@@ -85,13 +88,20 @@ const HeadingContainer = styled.div({
 });
 
 export default function App({ Component, pageProps, router }: AppProps) {
+    const { theme, toggleTheme, componentMounted } = useDarkMode();
+    const themeMode = theme === 'light' ? light : dark;
+
+    if (!componentMounted) {
+        return <div style={{width: '100vw', height: '100vh'}} />
+    }
+
     return (
         <LazyMotion features={async () => (await import('../components/domMax')).default}>
             <Provider store={store}>
-                <ThemeProvider theme={light}>
-                    {/* <YMetrika /> */}
+                <ThemeProvider theme={themeMode}>
                     <YMInitializer accounts={[92124733]} options={{webvisor: true}} version="2"  />
                     <GlobalStyle />
+                    <Analytics />
                     <StyledMain className={inter.className}>
                         <HeadingContainer>
                             <Logo>

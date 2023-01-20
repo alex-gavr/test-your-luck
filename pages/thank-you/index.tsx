@@ -20,12 +20,12 @@ const ThankYou = () => {
             </FlexCCC>
             <p>Did you like it?</p>
             <ButtonsContainer>
-                <StyledLinkPrimary href={'https://www.google.com/'} onClick={handleYes}>
-                    Yes
-                </StyledLinkPrimary>
                 <StyledLinkError href={'https://www.google.com/'} onClick={handleNo}>
                     No
                 </StyledLinkError>
+                <StyledLinkPrimary href={'https://www.google.com/'} onClick={handleYes}>
+                    Yes
+                </StyledLinkPrimary>
             </ButtonsContainer>
         </StyledSection>
     );
