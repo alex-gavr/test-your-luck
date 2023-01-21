@@ -8,9 +8,10 @@ import styled from 'styled-components';
 import { Inter } from '@next/font/google';
 import { StyledMain } from '@/components/styles';
 import Image from 'next/image';
-import { YMInitializer } from 'react-yandex-metrika';
+import ym, { YMInitializer } from 'react-yandex-metrika';
 import { Analytics } from '@vercel/analytics/react';
 import { useDarkMode } from '@/utils/useDarkMode';
+import { useEffect } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -57,7 +58,7 @@ const dark: DefaultTheme = {
         heading: 'clamp(2.75rem, 2.6442rem + 0.5128vw, 3.125rem)',
     },
 };
-const Logo = styled.div( props => ({
+const Logo = styled.div((props) => ({
     backgroundColor: props.theme.colors.primaryLight,
     padding: '0.5rem 1rem',
     display: 'flex',
@@ -66,7 +67,7 @@ const Logo = styled.div( props => ({
     justifyContent: 'center',
     gap: '.5rem',
     boxShadow: '1px 1px 5px 2px rgba(0, 0, 0, 0.2)',
-}))
+}));
 
 const StyledHeading = styled.h1((props) => ({
     textAlign: 'center',
@@ -84,29 +85,38 @@ const HeadingContainer = styled.div({
     width: '100%',
     '& > p': {
         fontSize: '0.7rem',
-    }
+    },
 });
 
 export default function App({ Component, pageProps, router }: AppProps) {
     const { theme, toggleTheme, componentMounted } = useDarkMode();
     const themeMode = theme === 'light' ? light : dark;
+    useEffect(() => {
+        if (componentMounted) {
+            if (theme === 'light') {
+                ym('reachGoal', 'lightMode');
+            } else {
+                ym('reachGoal', 'darkMode');
+            }
+        }
+    }, [componentMounted, theme]);
 
     if (!componentMounted) {
-        return <div style={{width: '100vw', height: '100vh'}} />
+        return <div style={{ width: '100vw', height: '100vh' }} />;
     }
 
     return (
         <LazyMotion features={async () => (await import('../components/domMax')).default}>
             <Provider store={store}>
                 <ThemeProvider theme={themeMode}>
-                    <YMInitializer accounts={[92124733]} options={{webvisor: true}} version="2"  />
+                    <YMInitializer accounts={[92124733]} options={{ webvisor: true }} version='2' />
                     <GlobalStyle />
                     <Analytics />
                     <StyledMain className={inter.className}>
                         <HeadingContainer>
                             <Logo>
-                                <Image src={'./luck.svg'} alt='' width={30} height={30} style={{rotate: '-20deg'}} />
-                            <StyledHeading>Test Your Luck</StyledHeading>
+                                <Image src={'./luck.svg'} alt='' width={30} height={30} style={{ rotate: '-20deg' }} />
+                                <StyledHeading>Test Your Luck</StyledHeading>
                             </Logo>
                             {router.pathname === '/' && <p>Mini Game 1 out of 2</p>}
                             {router.pathname === '/find-pairs' && <p>Mini Game 2 out of 2</p>}
