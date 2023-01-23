@@ -3,7 +3,6 @@ import { useAppSelector } from '@/services/hook';
 import ym from 'react-yandex-metrika';
 import styled from 'styled-components';
 
-
 const ThankYou = () => {
     const { fromMainExit } = useAppSelector((state) => state.mainExit);
     const handleYes = () => {
@@ -14,9 +13,9 @@ const ThankYou = () => {
     };
     return (
         <StyledSection>
-            <FlexCCC style={{gap: '1rem'}}>
-                {fromMainExit && <p style={{width: '98%', textAlign: 'center'}}>Sorry, currently, there are no offers available </p>}
-                <h1 style={{width: '98%', textAlign: 'center'}}>Thank you for playing!</h1>
+            <FlexCCC style={{ gap: '1rem' }}>
+                {fromMainExit && <p style={{ textAlign: 'center' }}>Sorry, currently, there are no offers available </p>}
+                <h1 style={{ textAlign: 'center' }}>Thank you for playing!</h1>
             </FlexCCC>
             <p>Did you like it?</p>
             <ButtonsContainer>
