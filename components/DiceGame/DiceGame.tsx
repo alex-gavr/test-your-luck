@@ -40,6 +40,7 @@ const NumberContainer = styled.li<IProps>((props) => ({
 }));
 
 const diceNumbers: Array<1 | 2 | 3 | 4 | 5 | 6> = [1, 2, 3, 4, 5, 6];
+
 const DiceGame = () => {
     const rInt = Math.floor(Math.random() * 6) + 1;
     const [userChoice, setUserChoice] = useState<1 | 2 | 3 | 4 | 5 | 6 | undefined>(undefined);
@@ -98,8 +99,6 @@ const DiceGame = () => {
                 ))}
             </FlexRow>
             <DiceWithAnimation randomNumber={randomNumber} isAnimation={isAnimating} animationEndHandler={animationEndHandler} />
-
-            {/* {showHint && <p>C&apos;mon, make a guess!</p>} */}
             {isUserWon ? (
                 <NextGame href={'./find-pairs'} onClick={handleNextGame}>
                     Next Game
@@ -112,7 +111,6 @@ const DiceGame = () => {
             <p style={userChoice || isUserWon ? { fontSize: '0.8rem', visibility: 'visible' } : { visibility: 'hidden' }}>
                 {userChoice ? 'Probability of the win: 16.6%' : isUserWon ? 'You guessed correctly! Nice!' : null}
             </p>
-            {/* {isUserWon && <p> You guessed correctly! Nice!</p>} */}
         </StyledDiv>
     );
 };

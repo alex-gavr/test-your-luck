@@ -164,7 +164,7 @@ const CardsGame = () => {
     }, [cards, shuffling, shuffledTimes]);
 
     return (
-        <AnimatePresence mode='wait'>
+        <AnimatePresence>
             <Wrapper variants={containerAnimation} initial='hidden' animate='visible' exit='exit'>
                 <CardsContainer style={shuffling || mistake ? { pointerEvents: 'none' } : {}}>
                     {cards ? (

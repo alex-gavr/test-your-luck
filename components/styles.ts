@@ -75,7 +75,6 @@ export const ButtonsContainer = styled.div((props) => ({
 }));
 
 
-
 export const StyledLinkPrimary = styled(Link)((props) => ({
     width: 'auto',
     height: 'auto',
@@ -101,3 +100,32 @@ export const StyledBottomDiv = styled.div((props) => ({
     gap: '0.5rem',
 }))
 
+export const Logo = styled.div((props) => ({
+    backgroundColor: props.theme.colors.primaryLight,
+    padding: '0.5rem 1rem',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '.5rem',
+    boxShadow: '1px 1px 5px 2px rgba(0, 0, 0, 0.2)',
+}));
+
+export const StyledHeading = styled.h1((props) => ({
+    textAlign: 'center',
+    fontSize: '1.3rem',
+    color: props.theme.colors.secondaryDark,
+}));
+
+export const HeadingContainer = styled.div({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.8rem',
+    top: '1rem',
+    width: '100%',
+    '& > p': {
+        fontSize: '0.7rem',
+    },
+});

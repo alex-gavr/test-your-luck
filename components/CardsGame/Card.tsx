@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { AnimationControls, m, TargetAndTransition, useAnimationControls, VariantLabels, Variants } from 'framer-motion';
+import { m } from 'framer-motion';
 import Image from 'next/image';
 import { ICardsData } from '@/types';
 import { useEffect, useState } from 'react';
@@ -34,12 +34,7 @@ const StyledCard = styled(m.div)((props) => ({
     },
 }));
 
-
-interface IProps extends ICardsData {
-    variants?: Variants;
-    animate?: boolean | TargetAndTransition | AnimationControls | VariantLabels | undefined;
-}
-const Card = ({ img, name, id }: IProps) => {
+const Card = ({ img, name, id }: ICardsData) => {
     const dispatch = useAppDispatch();
     const { flippedCardsCount, gameStarted, currentCard, pineapplesShown } = useAppSelector((state) => state.cardsGame);
     const [isFlipped, setIsFlipped] = useState(false);
