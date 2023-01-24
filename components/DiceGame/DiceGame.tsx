@@ -108,8 +108,8 @@ const DiceGame = () => {
                     Roll
                 </StartGameButton>
             )}
-            <p style={userChoice || isUserWon ? { fontSize: '0.8rem', visibility: 'visible' } : { visibility: 'hidden' }}>
-                {userChoice ? 'Probability of the win: 16.6%' : isUserWon ? 'You guessed correctly! Nice!' : null}
+            <p style={userChoice || isUserWon ? { fontSize: '0.8rem', visibility: 'visible' } : { fontSize: '0.8rem', visibility: 'hidden' }}>
+                {userChoice ? 'Probability of the win: 16.6%' : isUserWon ? 'You guessed correctly! Nice!' : 'Removes Layout Shift'}
             </p>
         </StyledDiv>
     );
